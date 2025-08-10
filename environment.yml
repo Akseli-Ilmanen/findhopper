@@ -13,4 +13,3 @@ dependencies:
       - thunderhopper
       - librosa
       - opencv-python
-      - pydub 
