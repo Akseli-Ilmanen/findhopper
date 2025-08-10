@@ -1,4 +1,4 @@
-name: hopperfinder
+name: findhopper
 channels:
   - conda-forge
   - defaults
@@ -7,9 +7,10 @@ dependencies:
   - numpy>=1.20
   - scipy>=1.7
   - matplotlib>=3.5
+  - ffmpeg
   - pip:
       - audian
       - thunderhopper
-      - thunderlab
       - librosa
       - opencv-python
+      - pydub 

@@ -8,13 +8,15 @@ It includes some additional code to do source localization for microphone array 
 
 ## Installation
 
-We recommend installing a [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) virtual environment using the provided `environment.yml` file. This will install all the required dependencies. Change directory to the ```finderhopper``` folder and run the following commands:
+We recommend installing a [Conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) virtual environment using the provided `environment.yml` file. This will install all the required dependencies. Change directory to the ```findhopper``` folder and run the following commands:
 
+```
 1. conda env create -f environment.yml
 2. conda activate findhopper
+```
 
 
-## Testing with sample dasta
+## Testing with sample data
 
 https://whale.am28.uni-tuebingen.de/nextcloud/index.php/s/Jg9iyR397peCE96
 

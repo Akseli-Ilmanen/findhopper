@@ -11,13 +11,12 @@ def plot_uniform_cartesian_grid(
     mic_positions=None,
     source_positions=None,
     ax=None,
+    simplistic=False,
 ):
     dims = np.array(dims)
     n_dims = len(dims)
 
-    points = grid.asarray()
-
-    points = np.array(points)
+    points = np.array(grid.asarray())
 
     show = False
     if ax is None:
@@ -25,10 +24,7 @@ def plot_uniform_cartesian_grid(
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="3d" if n_dims == 3 else None)
 
-    ax.set_xlabel("Width (m)")
-    ax.set_ylabel("Length (m)")
-
-    cmap = "viridis" if srp_map is not None else None
+    cmap = "viridis" if srp_map is not None and not simplistic else None
     scatter = ax.scatter(
         *[points[:, i] for i in range(n_dims)], c=srp_map, marker="o", cmap=cmap
     )
@@ -45,7 +41,7 @@ def plot_uniform_cartesian_grid(
         if len(dims) == 3:
             ax.set_zlim(dims[2][0], dims[2][1])
 
-    if srp_map is not None:
+    if srp_map is not None and not simplistic:
         plt.colorbar(scatter, label="SRP Value", ax=ax)
 
     if mic_positions is not None:
@@ -55,7 +51,8 @@ def plot_uniform_cartesian_grid(
             color="red",
             label="Mic. positions"
         )
-        ax.legend()
+        if not simplistic:
+            ax.legend()
     if source_positions is not None:
         ax.scatter(
             *[source_positions[:, i] for i in range(n_dims)],
@@ -63,7 +60,12 @@ def plot_uniform_cartesian_grid(
             color="orange",
             label="Source positions"
         )
-        ax.legend()
+        if not simplistic:
+            ax.legend()
+
+    if not simplistic:
+        ax.set_xlabel("Width (m)")
+        ax.set_ylabel("Length (m)")
 
     if output_path is None:
         if show:
