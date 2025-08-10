@@ -45,7 +45,8 @@ feat_rate = 3000
 # then 'go down' left/right from the peak until you reach norm < peak_boundary_threshold
 peak_threshold = 0.4
 peak_boundary_threshold = 0.2
-save_masked_signal = False # Can save the intermediate 'masked_signal.wav' and inspect in audacity
+save_masked_signal = True # Can save the intermediate 'masked_signal.wav' and inspect in audacity
+
 
 
 # SRP mic settings
@@ -58,6 +59,7 @@ mic_array_origin = [1.0, 1.0]  # bottom-left corner of mic array in room coordin
 # spectrogram 
 n_fft = 1024
 hop_length = 512
+
 
 
 # Images
@@ -130,43 +132,39 @@ signal  = filter(data=signal, lowcut=lowcut, highcut=highcut, fs=rate, btype='ba
 signal_norm_mask = signal.copy()
 
 
-# returns = ['norm']
-# config = configuration(feat_rate=feat_rate, env_rate=feat_rate)
-# print(f"Runninng thunderhopper pipeline...")
-# data,_  = process_signal(config, signal=signal, rate=rate, returns=returns)
-
-
-# norm_resampled = resample(data["norm"], signal.shape[0], axis=0)
-
-# print("Segmenting based on feature norm...")
-# for i in range(n_chan):
-#     print(f"Processing channel {i+1}...")
-#     peaks = find_peaks(norm_resampled[:, i], height=peak_threshold)[0]
-#     print(f"Found {len(peaks)} peaks in channel {i+1}. If none found, adjust peak_threshold")
-#     regions = find_peak_boundaries(norm_resampled[:, i], peaks, boundary_threshold=peak_boundary_threshold)
-
-#     mask = np.zeros(signal_norm_mask.shape[0], dtype=bool)
-#     for (start, end) in regions:        
-#         mask[start:end] = True
-
-#     signal_norm_mask[~mask, i] = 0
-
-
-# if save_masked_signal:
-#     print("Saving masked signal to 'masked_signal.wav'")
-#     write_audio(signal_norm_mask, 'masked_signal.wav', rate=rate)
+returns = ['norm']
+config = configuration(feat_rate=feat_rate, env_rate=feat_rate)
+print(f"Runninng thunderhopper pipeline...")
+data,_  = process_signal(config, signal=signal, rate=rate, returns=returns)
 
 
 
 
-# # Create boolean mask for samples where there is a segment in any channel
-# segment_boolean = np.any(signal_norm_mask != 0, axis=1)
-# np.save(bool_path, segment_boolean)
+print("Segmenting based on feature norm...")
+norm_resampled = resample(data["norm"], signal.shape[0], axis=0)
+for i in range(n_chan):
+    print(f"Processing channel {i+1}...")
+    peaks = find_peaks(norm_resampled[:, i], height=peak_threshold)[0]
+    print(f"Found {len(peaks)} peaks in channel {i+1}. If none found, adjust peak_threshold")
+    regions = find_peak_boundaries(norm_resampled[:, i], peaks, boundary_threshold=peak_boundary_threshold)
+
+    mask = np.zeros(signal_norm_mask.shape[0], dtype=bool)
+    for (start, end) in regions:        
+        mask[start:end] = True
+
+    signal_norm_mask[~mask, i] = 0
 
 
-segment_boolean = np.load(bool_path, allow_pickle=True) if bool_path.exists() else None
+if save_masked_signal:
+    print("Saving masked signal to 'masked_signal.wav'")
+    write_audio(signal_norm_mask, 'masked_signal.wav', rate=rate)
 
 
+
+# Create boolean mask for samples where there is a segment in any channel
+segment_boolean = np.any(signal_norm_mask != 0, axis=1)
+np.save(bool_path, segment_boolean)
+# segment_boolean = np.load(bool_path, allow_pickle=True) if bool_path.exists() else None
 
 # Make list of (start, stop) tuples for those segments
 seg_indices = []
@@ -261,10 +259,6 @@ for freq_band in freq_bands:
         audio_filename = Path(video_path, f'source_audio-{freq_band}.wav')
         write_audio(str(audio_filename), signal_source_mask, rate=rate)
 
-        # If some frequency bands have very quiet sources, could amplify gain, like done here. 
-        # The problem is that background noise is also amplified a lot. Maybe in the future, someone could add a function
-        # to only export wav files for certain channels and segments where the call occurs.
-        # normalize_wav_loudness(str(audio_filename), str(audio_filename), threshold_db=-40.0)
 
         # Video (.mp4)
         video_filename = Path(video_path, f'source_video_{freq_band}.mp4')
