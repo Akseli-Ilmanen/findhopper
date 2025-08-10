@@ -164,6 +164,8 @@ if save_masked_signal:
 # Create boolean mask for samples where there is a segment in any channel
 segment_boolean = np.any(signal_norm_mask != 0, axis=1)
 np.save(bool_path, segment_boolean)
+
+
 # segment_boolean = np.load(bool_path, allow_pickle=True) if bool_path.exists() else None
 
 # Make list of (start, stop) tuples for those segments
