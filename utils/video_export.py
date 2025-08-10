@@ -112,29 +112,4 @@ def combine_audio_video(video_path, audio_filename, video_filename, output_filen
     
 
 
-def normalize_wav_loudness(input_file, output_file, threshold_db=-40.0):
-    """
-    Adjusts the loudness of a WAV file to meet a minimum dBFS threshold.
-
-    Args:
-        input_file (str): Path to the input .wav file.
-        output_file (str): Path where the adjusted .wav will be saved.
-        threshold_db (float): Minimum target loudness in dBFS. Default is -40.0.
-    """
-    
-    audio = AudioSegment.from_wav(input_file)
-
-
-    current_loudness = audio.dBFS
-    print(f"Current loudness: {current_loudness:.2f} dBFS")
-
-    # If quieter than threshold, apply gain
-    if current_loudness < threshold_db:
-        gain_needed = threshold_db - current_loudness
-        print(f"Applying gain of {gain_needed:.2f} dB")
-        audio = audio.apply_gain(gain_needed)
-
-    audio.export(output_file, format="wav")
-
-
 
