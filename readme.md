@@ -4,7 +4,8 @@ This is a forked copy of the [xsrp](https://github.com/egrinstein/xsrp) reposito
 
 It includes some additional code to do source localization for microphone array recordings of grasshoppers and crickets (see also [thunderhopper](https://github.com/bendalab/thunderhopper) repository). 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ajGM4t9v8g4?si=NyuYu2HintGBqQLJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![findHopper: Python code for sound source localization in grasshoppers.](https://img.youtube.com/vi/ajGM4t9v8g4/0.jpg)](https://www.youtube.com/watch?v=ajGM4t9v8g4)
+
 
 
 ## Installation
